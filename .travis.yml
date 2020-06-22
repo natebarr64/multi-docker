@@ -1,0 +1,23 @@
+sudo: required
+servies:
+  - docker
+
+before_install:
+  - docker build -t natebarr/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run natebarr/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t natebarr/multi-client ./client
+  - docker biuld -t natebarr/multi-nginx ./nginx
+  - docker build -t natebarr/multi-server ./server
+  - docker build -t natebarr/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push natebarr/multi-client
+  - docker push natebarr/multi-nginx
+  - docker push natebarr/multi-server
+  - docker push natebarr/multi-worker
+
