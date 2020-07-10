@@ -10,7 +10,7 @@ script:
 
 after_success:
   - docker build -t natebarr/multi-client ./client
-  - docker biuld -t natebarr/multi-nginx ./nginx
+  - docker build -t natebarr/multi-nginx ./nginx
   - docker build -t natebarr/multi-server ./server
   - docker build -t natebarr/multi-worker ./worker
   # Log in to the docker CLI
